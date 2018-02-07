@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tools/1.2.7/jquery.tools.min.js"></script>
+    <style>
+
+        body {
+            margin: 200px;
+        }
+
+        .scrollable {
+            position:relative;
+            -overflow:hidden;
+            width: 100px;
+            height:75px;
+            border: 1px solid red;
+        }
+        .scrollable .items {
+            width:20000em;
+            position:absolute;
+        }
+        .items div {
+            float:left;
+        }
+
+        .dots span {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            border-radius: 10px;
+            background-color: #333333;
+            margin: 0px 2px;
+        }
+        .dots span.active {
+            background-color: red;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="scrollable" id="scrollable">
+    <div class="items">
+        <div><img src="http://farm1.static.flickr.com/143/321464099_a7cfcb95cf_t.jpg" /></div>
+        <div><img src="" data-src="http://farm4.static.flickr.com/3089/2796719087_c3ee89a730_t.jpg" /></div>
+        <div><img src="" data-src="http://farm1.static.flickr.com/79/244441862_08ec9b6b49_t.jpg" /></div>
+        <div><img src="" data-src="http://farm1.static.flickr.com/28/66523124_b468cf4978_t.jpg" /></div>
+    </div>
+</div>
+
+<script>
+
+  $(function() {
+    $('.scrollable').scrollable({
+      onBeforeSeek: function (e, i) {
+        //$(e.target).find('.items > div').eq(i).find('img').each(function (i, el) { $(el).attr('src', $(el).attr('data-src')); });
+        $(e.target).find('.items > div').eq(i + 1).find('img[data-src]').each(function (i, el) {
+          $(el).attr('src', $(el).attr('data-src'));
+        });
+        $(e.target).next().find('span').removeClass('active').eq(i).addClass('active');
+      },
+      onSeek: function (event, i) {
+        //console.log($(event.target));
+        //$(event.target).next().find('span').removeClass('active').eq(i).addClass('active');
+      }
+    }).data('scrollable').begin();
+  });
+
+  $('.scrollable .items').click(function (e) {
+    $(e.target).parents('.scrollable').eq(0).data('scrollable').next();
+  });
+
+  $('.scrollable').each(function (i, el) {
+
+    var dots = $('<div class="dots">').insertAfter(el);
+
+    $(el).find('.items > div').each(function (i, el) {
+      dots.append('<span>');
+    });
+
+  });
+
+</script>
+
+</body>
+</html>
